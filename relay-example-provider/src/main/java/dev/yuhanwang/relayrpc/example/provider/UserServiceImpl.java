@@ -8,8 +8,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class UserServiceImpl implements UserService {
-    private final Map<Long,User> store = new ConcurrentHashMap<>();
-    private final AtomicLong idGenerator = new AtomicLong(0);
+    private static final Map<Long,User> store = new ConcurrentHashMap<>();
+    private static final AtomicLong idGenerator = new AtomicLong(0);
 
     @Override
     public User getUserById(Long id) {
