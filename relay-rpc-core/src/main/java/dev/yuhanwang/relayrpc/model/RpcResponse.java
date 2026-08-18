@@ -12,6 +12,7 @@ import java.io.Serializable;
 @Data
 @Builder
 public class RpcResponse implements Serializable {
+    private static final Long serialVersionUID=1L;
     //data, message, datatype, exception
     private Object data;
     private Class<?> dataType;

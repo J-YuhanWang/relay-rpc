@@ -12,6 +12,7 @@ import java.io.Serializable;
 @Data
 @Builder
 public class RpcRequest implements Serializable {
+    private static final Long serialVersionUID=1L;
     private String serviceName;
     private String methodName;
     private Class<?>[] parameterTypes;
