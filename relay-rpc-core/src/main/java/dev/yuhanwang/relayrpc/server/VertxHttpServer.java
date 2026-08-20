@@ -18,13 +18,7 @@ public class VertxHttpServer implements HttpServer{
 
 
         //3. bind a request handler
-        server.requestHandler(request->{
-            log.info("Received RPC request:{} {} ", request.method(), request.uri());
-
-            request.response()
-                    .putHeader("content-type","application/json")
-                    .end("Hello from Vert.x HTTP server!");
-        });
+        server.requestHandler(new HttpServerHandler());
 
         //4. listen on the specific port
         server.listen(port)
