@@ -9,15 +9,16 @@ import dev.yuhanwang.relayrpc.example.common.service.UserService;
 public class ConsumerExample {
     public static void main(String[] args) {
         //TODO: replay with ServiceProxyFactory.getProxy(UserService.class) once proxy package exists
-        UserService userService=null;
+        UserService userService=new UserServiceProxy();
 
         User user = new User();
         user.setName("Blair");
 
-        // TODO: uncomment once userService is a real proxy
-//        Long id = userService.createUser(user);
-//        User result = userService.getUserById(id);
-//        System.out.println(result.getName());
+        Long userId = userService.createUser(user);
+        System.out.println("RPC 1: created user with ID "+userId);
+
+        User result = userService.getUserById(userId);
+        System.out.println("RPC 2: queried user from server: "+ result.getName()+" (ID: "+ result.getId()+")");
 
 
     }
