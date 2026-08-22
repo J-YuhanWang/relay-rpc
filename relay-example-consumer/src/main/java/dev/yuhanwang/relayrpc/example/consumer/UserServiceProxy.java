@@ -21,7 +21,12 @@ import java.time.Duration;
 @Slf4j
 public class UserServiceProxy implements UserService {
     // specify the serializer
-    Serializer serializer = new JdkSerializer();
+    private final Serializer serializer = new JdkSerializer();
+    private static final String SERVER_URL="http://localhost:8080";
+    // 1. create JDK native httpclient
+    private static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()
+            .connectTimeout(Duration.ofSeconds(5))
+            .build();
 
     @Override
     public User getUserById(Long id) {
@@ -57,19 +62,16 @@ public class UserServiceProxy implements UserService {
             byte[] bodyBytes = serializer.serialize(rpcRequest);
 
             // send rpc request by http client
-            // 1. create JDK native httpclient
-            HttpClient client = HttpClient.newBuilder()
-                    .connectTimeout(Duration.ofSeconds(5))
-                    .build();
+
             // 2. construct standard http post request
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8080"))
+                    .uri(URI.create(SERVER_URL))
                     .header("Content-Type", "application/octet-stream")
                     .POST(HttpRequest.BodyPublishers.ofByteArray(bodyBytes))
                     .build();
 
             // 3.send and receive the byte sequence response(byte[])
-            HttpResponse<byte[]> response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
+            HttpResponse<byte[]> response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofByteArray());
 
             // 4.deserialize
             return serializer.deserialize(response.body(), RpcResponse.class);
