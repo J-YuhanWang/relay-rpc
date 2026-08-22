@@ -4,11 +4,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-### Planned
-- Dynamic proxy implementation using JDK `InvocationHandler`
-- Factory pattern abstraction for client-side proxy generation
 
 ---
+
 
 ## [0.1.0] - 2026-08-22
 ### Added
@@ -21,4 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Unit tests for `LocalRegistry` covering register/get/remove behavior.
   - Reflection-based request routing and execution handler (`HttpServerHandler`).
 - Unified logging facade with SLF4J and Logback implementation.
-- Proof-of-concept static proxy (`UserServiceProxy`) and consumer bootstrap example, using a shared singleton JDK 11 native `HttpClient` for connection pooling.
+- Client-side dynamic proxy engine:
+  - Universal `ServiceProxy` implementing JDK `InvocationHandler`, using a shared singleton JDK 11 native `HttpClient` for connection pooling.
+  - Generic `ServiceProxyFactory` to dynamically instantiate client service stubs.
+  - `ConsumerExample` bootstrapped via `ServiceProxyFactory`.
+- Proof-of-concept static proxy (`UserServiceProxy`), retained in the codebase as a reference implementation predating the dynamic proxy.
