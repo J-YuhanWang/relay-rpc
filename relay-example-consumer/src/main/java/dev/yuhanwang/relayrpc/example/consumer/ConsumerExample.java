@@ -2,14 +2,15 @@ package dev.yuhanwang.relayrpc.example.consumer;
 
 import dev.yuhanwang.relayrpc.example.common.model.User;
 import dev.yuhanwang.relayrpc.example.common.service.UserService;
+import dev.yuhanwang.relayrpc.proxy.ServiceProxyFactory;
 
 /**
  * Service consumer example
  */
 public class ConsumerExample {
     public static void main(String[] args) {
-        //TODO: replay with ServiceProxyFactory.getProxy(UserService.class) once proxy package exists
-        UserService userService=new UserServiceProxy();
+        //Dynamically generate a userService proxy object using a dynamic proxy factory
+        UserService userService= ServiceProxyFactory.getProxy(UserService.class);
 
         User user = new User();
         user.setName("Blair");
