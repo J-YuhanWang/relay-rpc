@@ -1,5 +1,6 @@
 package dev.yuhanwang.relayrpc.example.consumer;
 
+import dev.yuhanwang.relayrpc.RpcApplication;
 import dev.yuhanwang.relayrpc.example.common.model.User;
 import dev.yuhanwang.relayrpc.example.common.service.UserService;
 import dev.yuhanwang.relayrpc.proxy.ServiceProxyFactory;
@@ -9,6 +10,7 @@ import dev.yuhanwang.relayrpc.proxy.ServiceProxyFactory;
  */
 public class ConsumerExample {
     public static void main(String[] args) {
+        RpcApplication.initialize();
         //Dynamically generate a userService proxy object using a dynamic proxy factory
         UserService userService= ServiceProxyFactory.getProxy(UserService.class);
 

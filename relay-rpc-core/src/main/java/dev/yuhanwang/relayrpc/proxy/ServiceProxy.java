@@ -1,5 +1,7 @@
 package dev.yuhanwang.relayrpc.proxy;
 
+import dev.yuhanwang.relayrpc.RpcApplication;
+import dev.yuhanwang.relayrpc.config.RpcConfig;
 import dev.yuhanwang.relayrpc.model.RpcRequest;
 import dev.yuhanwang.relayrpc.model.RpcResponse;
 import dev.yuhanwang.relayrpc.serializer.JdkSerializer;
@@ -20,7 +22,7 @@ import java.time.Duration;
 @Slf4j
 public class ServiceProxy implements InvocationHandler {
 
-    private static final String SERVER_URL = "http://localhost:8080";
+//    private static final String SERVER_URL = "http://localhost:8080";
     //1.specify serializer
     private final Serializer serializer = new JdkSerializer();
 
@@ -29,6 +31,11 @@ public class ServiceProxy implements InvocationHandler {
             .connectTimeout(Duration.ofSeconds(5))
             .build();
 
+    private URI getServerUri(){
+        RpcConfig config = RpcApplication.getConfig();
+        String serverUrl = "http://"+config.serverHost()+":"+config.serverPort();
+        return URI.create(serverUrl);
+    }
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args){
@@ -40,13 +47,17 @@ public class ServiceProxy implements InvocationHandler {
                 .parameterTypes(method.getParameterTypes())
                 .args(args)
                 .build();
+        URI serverUri = getServerUri();
+
+        log.info("Sending RPC request to {}",serverUri);
+
         try {
             // serialize the rpcRequest to byte[]
             byte[] bodyBytes = serializer.serialize(rpcRequest);
 
             //send http post request
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(SERVER_URL))
+                    .uri(serverUri)
                     .header("Content-Type", "application/octet-stream")
                     .POST(HttpRequest.BodyPublishers.ofByteArray(bodyBytes))
                     .build();
