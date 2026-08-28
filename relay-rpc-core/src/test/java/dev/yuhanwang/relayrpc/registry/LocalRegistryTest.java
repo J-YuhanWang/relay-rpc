@@ -15,8 +15,8 @@ public class LocalRegistryTest {
     //clear registry after
     @AfterEach
     void tearDown(){
-        LocalRegistry.remove("dummyServiceImpl");
-        LocalRegistry.remove("toRemoveServiceImpl");
+        LocalRegistry.remove("dummyService");
+        LocalRegistry.remove("toRemoveService");
     }
 
     @Test
