@@ -17,10 +17,13 @@ public final class RpcConfigLoader {
      *
      * @return the resolved RPC configuration
      */
-    public static RpcConfig load(){
+    public static RpcConfig load() {
         // 1. read properties file
         Properties properties = loadProperties();
+        return resolve(properties);
+    }
 
+    static RpcConfig resolve(Properties properties) {
         // 2. get default configurations
         RpcConfig defaults = RpcConfig.defaults();
 
