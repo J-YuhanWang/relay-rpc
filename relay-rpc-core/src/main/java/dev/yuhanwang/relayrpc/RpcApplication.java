@@ -12,7 +12,7 @@ import java.util.Objects;
 @Slf4j
 public final class RpcApplication {
 
-    private static RpcConfig config;
+    private static volatile RpcConfig config;
 
     private RpcApplication(){
     }
@@ -21,7 +21,7 @@ public final class RpcApplication {
      * Initializes RelayRPC from the classpath configuration.
      * write the config
      */
-    public static void initialize(){
+    public static synchronized void initialize(){
         initialize(RpcConfigLoader.load());
     }
 
@@ -30,7 +30,7 @@ public final class RpcApplication {
      *
      * @param customConfig custom RPC configuration
      */
-    public static void initialize(RpcConfig customConfig){
+    public static synchronized void initialize(RpcConfig customConfig){
         config = Objects.requireNonNull(customConfig, "RPC config must not be null");
         log.info("RelayRPC initialized: name={}, version={}, server={}:{}",
                 config.name(),
@@ -47,11 +47,19 @@ public final class RpcApplication {
      * @return the global RPC configuration
      */
     public static RpcConfig getConfig(){
-        if(config==null){
-            initialize();
+        RpcConfig current = config;
+
+        if(current==null){
+            synchronized (RpcApplication.class){
+                current = config;
+                if(current==null){
+                    current = RpcConfigLoader.load();
+                    config = current;
+                }
+            }
         }
 
-        return config;
+        return current;
     }
 
 
