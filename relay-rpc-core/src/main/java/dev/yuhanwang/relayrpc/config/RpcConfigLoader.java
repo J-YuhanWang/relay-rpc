@@ -32,11 +32,12 @@ public final class RpcConfigLoader {
         String version = properties.getProperty(RpcConfigKeys.VERSION, defaults.version());
         String serverHost = properties.getProperty(RpcConfigKeys.SERVER_HOST, defaults.serverHost());
         int serverPort = readInteger(properties,RpcConfigKeys.SERVER_PORT, defaults.serverPort());
+        String serializer = properties.getProperty(RpcConfigKeys.SERIALIZER,defaults.serializer());
 
         validatePort(serverPort);
 
         // 4. create and return RpcConfig
-        return new RpcConfig(name,version,serverHost,serverPort);
+        return new RpcConfig(name,version,serverHost,serverPort,serializer);
     }
 
     /**

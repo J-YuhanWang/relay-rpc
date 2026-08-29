@@ -14,6 +14,8 @@ public final class RpcConfigKeys {
 
     public static final String SERVER_PORT = PREFIX + ".server.port";
 
+    public static final String SERIALIZER = PREFIX + ".serializer";
+
     /**
      * Prevents instantiation.
      */

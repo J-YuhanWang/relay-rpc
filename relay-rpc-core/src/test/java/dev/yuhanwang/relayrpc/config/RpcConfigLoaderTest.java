@@ -18,6 +18,7 @@ public class RpcConfigLoaderTest {
         properties.setProperty(RpcConfigKeys.VERSION,"2.0");
         properties.setProperty(RpcConfigKeys.SERVER_HOST,"127.0.0.1");
         properties.setProperty(RpcConfigKeys.SERVER_PORT,"9090");
+        properties.setProperty(RpcConfigKeys.SERIALIZER,"json");
 
         //ACT
         RpcConfig result = RpcConfigLoader.resolve(properties);
@@ -27,6 +28,7 @@ public class RpcConfigLoaderTest {
         assertEquals("2.0",result.version());
         assertEquals("127.0.0.1",result.serverHost());
         assertEquals(9090,result.serverPort());
+        assertEquals("json",result.serializer());
     }
 
     @Test
@@ -55,6 +57,8 @@ public class RpcConfigLoaderTest {
         assertEquals(defaults.version(),result.version());
         assertEquals(defaults.serverHost(),result.serverHost());
         assertEquals(9090,result.serverPort());
+        assertEquals("jdk",result.serializer());
+        assertEquals(defaults.serializer(),result.serializer());
     }
 
     @Test
@@ -108,6 +112,7 @@ public class RpcConfigLoaderTest {
         assertEquals("relay-rpc-test",result.name());
         assertEquals("2.0",result.version());
         assertEquals("127.0.0.1",result.serverHost());
-        assertEquals(9090,result.serverPort());
+        assertEquals(8081,result.serverPort());
+        assertEquals("json",result.serializer());
     }
 }

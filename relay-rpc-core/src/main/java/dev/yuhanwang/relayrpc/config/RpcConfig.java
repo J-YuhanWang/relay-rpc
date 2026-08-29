@@ -1,5 +1,7 @@
 package dev.yuhanwang.relayrpc.config;
 
+import dev.yuhanwang.relayrpc.serializer.SerializerKeys;
+
 /**
  * Immutable RPC framework configuration: Define the immutable RpcConfig object after instantiation.
  *
@@ -11,7 +13,8 @@ package dev.yuhanwang.relayrpc.config;
 public record RpcConfig(String name,
                         String version,
                         String serverHost,
-                        int serverPort) {
+                        int serverPort,
+                        String serializer) {
 
     /**
      * Create an RPC configuration with default values
@@ -22,7 +25,8 @@ public record RpcConfig(String name,
                 "relay-rpc",
                 "1.0",
                 "localhost",
-                8080
+                8080,
+                SerializerKeys.JDK
         );
     }
 }

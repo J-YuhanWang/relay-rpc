@@ -12,7 +12,7 @@ public class RpcApplicationTest {
     @DisplayName("Should store and return the custom RPC configuration")
     void initialize_withCustomConfig_returnsSameInstance(){
         //arrange
-        RpcConfig customConfig = new RpcConfig("custom-rpc","2.0","127.0.0.1",8081);
+        RpcConfig customConfig = new RpcConfig("custom-rpc","2.0","127.0.0.1",8081,"json");
 
         //act
         RpcApplication.initialize(customConfig);
@@ -48,7 +48,8 @@ public class RpcApplicationTest {
         assertEquals("relay-rpc-test",result.name());
         assertEquals("2.0",result.version());
         assertEquals("127.0.0.1",result.serverHost());
-        assertEquals(9090,result.serverPort());
+        assertEquals(8081,result.serverPort());
+        assertEquals("json",result.serializer());
     }
 
 
