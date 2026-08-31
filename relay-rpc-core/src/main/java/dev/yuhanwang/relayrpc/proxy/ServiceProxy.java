@@ -4,8 +4,8 @@ import dev.yuhanwang.relayrpc.RpcApplication;
 import dev.yuhanwang.relayrpc.config.RpcConfig;
 import dev.yuhanwang.relayrpc.model.RpcRequest;
 import dev.yuhanwang.relayrpc.model.RpcResponse;
-import dev.yuhanwang.relayrpc.serializer.JdkSerializer;
 import dev.yuhanwang.relayrpc.serializer.Serializer;
+import dev.yuhanwang.relayrpc.serializer.SerializerFactory;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationHandler;
@@ -24,7 +24,7 @@ public class ServiceProxy implements InvocationHandler {
 
 //    private static final String SERVER_URL = "http://localhost:8080";
     //1.specify serializer
-    private final Serializer serializer = new JdkSerializer();
+    private final Serializer serializer = SerializerFactory.getInstance(RpcApplication.getConfig().serializer());
 
     //Singleton reuse connection pool
     private static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()

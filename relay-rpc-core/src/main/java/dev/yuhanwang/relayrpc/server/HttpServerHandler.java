@@ -1,10 +1,11 @@
 package dev.yuhanwang.relayrpc.server;
 
+import dev.yuhanwang.relayrpc.RpcApplication;
 import dev.yuhanwang.relayrpc.model.RpcRequest;
 import dev.yuhanwang.relayrpc.model.RpcResponse;
 import dev.yuhanwang.relayrpc.registry.LocalRegistry;
-import dev.yuhanwang.relayrpc.serializer.JdkSerializer;
 import dev.yuhanwang.relayrpc.serializer.Serializer;
+import dev.yuhanwang.relayrpc.serializer.SerializerFactory;
 import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerRequest;
@@ -22,7 +23,7 @@ public class HttpServerHandler implements Handler<HttpServerRequest> {
     @Override
     public void handle(HttpServerRequest request) {
         //1.specify the serializer
-        Serializer serializer = new JdkSerializer();
+        Serializer serializer = SerializerFactory.getInstance(RpcApplication.getConfig().serializer());
 
         //2.asychronously listen for the complete response body
         request.bodyHandler(body->{
@@ -74,7 +75,7 @@ public class HttpServerHandler implements Handler<HttpServerRequest> {
      * Helper funtion for sending http response
      */
     private void doResponse(HttpServerRequest request, RpcResponse rpcResponse, Serializer serializer){
-        HttpServerResponse httpServerResponse =request.response().putHeader("content-type","application/json");
+        HttpServerResponse httpServerResponse =request.response().putHeader("content-type","application/octet-stream");
         try{
             byte[] serialized = serializer.serialize(rpcResponse);
             httpServerResponse.end(Buffer.buffer(serialized));
