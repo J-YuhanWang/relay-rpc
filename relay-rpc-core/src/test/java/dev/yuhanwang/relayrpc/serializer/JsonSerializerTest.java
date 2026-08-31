@@ -2,7 +2,6 @@ package dev.yuhanwang.relayrpc.serializer;
 
 import dev.yuhanwang.relayrpc.model.RpcRequest;
 import dev.yuhanwang.relayrpc.model.RpcResponse;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -76,6 +75,41 @@ public class JsonSerializerTest {
         assertDoesNotThrow(
                 ()->serializer.deserialize(bytes, RpcRequest.class)
         );
+    }
+
+    @Test
+    void deserialize_withMissingParameterTypes_throwsIOException() throws IOException {
+        //arrange
+        RpcRequest rpcRequest = RpcRequest.builder()
+                .parameterTypes(null)
+                .args(null)
+                .serviceName("TestService")
+                .methodName("healthCheck")
+                .build();
+        //act
+        byte[] bytes = serializer.serialize(rpcRequest);
+        //assert
+        IOException exception = assertThrows(IOException.class,()->serializer.deserialize(bytes, RpcRequest.class));
+        assertEquals("RPC parameter types must not be null", exception.getMessage());
+    }
+
+    @Test
+    void deserialize_withMissingArgumentsForDeclaredParameters_throwsIOException() throws IOException {
+        // Arrange
+        RpcRequest rpcRequest = RpcRequest.builder()
+                .parameterTypes(new Class<?>[]{Long.class})
+                .args(null)
+                .serviceName("TestService")
+                .methodName("findUser")
+                .build();
+
+        byte[] bytes = serializer.serialize(rpcRequest);
+
+        // Act
+        IOException exception = assertThrows(IOException.class,() -> serializer.deserialize(bytes, RpcRequest.class));
+
+        // Assert
+        assertTrue(exception.getMessage().contains("argument count"));
     }
 
     @Test

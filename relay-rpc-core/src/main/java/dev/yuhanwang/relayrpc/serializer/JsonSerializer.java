@@ -46,9 +46,16 @@ public final class JsonSerializer implements Serializer{
         Class<?>[] parameterTypes = rpcRequest.getParameterTypes();
         Object[] args = rpcRequest.getArgs();
 
-        //null protection
-        if(args==null || parameterTypes==null){
-            return;
+        // Parameter type metadata is required
+        if(parameterTypes==null){
+            throw new IOException("RPC parameter types must not be null");
+        }
+        // A no-argument proxy invocation may provide null args
+        if(args==null){
+            if(parameterTypes.length==0){
+                return;
+            }
+            throw new IOException("RPC argument count does not match parameter type count");
         }
         //check array lengths
         if(parameterTypes.length != args.length){
