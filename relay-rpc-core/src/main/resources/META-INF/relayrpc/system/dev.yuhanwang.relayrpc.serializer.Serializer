@@ -1,0 +1,2 @@
+jdk=dev.yuhanwang.relayrpc.serializer.JdkSerializer
+json=dev.yuhanwang.relayrpc.serializer.JsonSerializer
