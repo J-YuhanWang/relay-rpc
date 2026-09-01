@@ -35,10 +35,12 @@ public class SerializerFactoryTest {
 
     @Test
     void getInstance_withUnsupportedKey_throwsException() {
+        String unsupportedKey = "unknown";
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                ()->SerializerFactory.getInstance("unknown"));
+                ()->SerializerFactory.getInstance(unsupportedKey));
 
-        assertTrue(exception.getMessage().contains("Unsupported serializer"));
+        assertTrue(exception.getMessage().contains(unsupportedKey));
+        assertTrue(exception.getMessage().contains(Serializer.class.getName()));
     }
 }

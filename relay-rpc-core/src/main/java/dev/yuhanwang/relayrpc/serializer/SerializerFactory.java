@@ -1,15 +1,16 @@
 package dev.yuhanwang.relayrpc.serializer;
 
+import dev.yuhanwang.relayrpc.spi.SpiLoader;
+
 import java.util.Map;
 
 public final class SerializerFactory {
     private SerializerFactory(){}
 
     //"jdk" - JdkSerializer, "json" - JsonSerializer
-    private static final Map<String,Serializer> SERIALIZERS = Map.of(
-            SerializerKeys.JDK, new JdkSerializer(),
-            SerializerKeys.JSON, new JsonSerializer()
-    );
+    static{
+        SpiLoader.load(Serializer.class);
+    }
 
     /**
      * Returns the serializer registered for the given key.
@@ -18,18 +19,7 @@ public final class SerializerFactory {
      * @return registered serializer instance
      */
     public static Serializer getInstance(String key){
-        // Validate key
-        if(key==null || key.isBlank()){
-            throw new IllegalArgumentException("Serializer key must not be blank");
-        }
 
-        // Find serializer
-        Serializer serializer = SERIALIZERS.get(key);
-        // Throw if unsupported
-        if(serializer==null){
-            throw new IllegalArgumentException("Unsupported serializer: " + key);
-        }
-        // Return serializer
-        return serializer;
+        return SpiLoader.getInstance(Serializer.class,key);
     }
 }
