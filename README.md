@@ -11,16 +11,41 @@ The project began as a guided RPC exercise and is being independently refactored
 A consumer calls a normal Java service interface. RelayRPC turns that call into an `RpcRequest`, serializes it, sends it to the provider over HTTP, invokes the target method, and converts the returned bytes back into the declared Java type.
 
 ```mermaid
-flowchart TD
-    A[Consumer calls service interface] --> B[JDK dynamic proxy builds RpcRequest]
-    B --> C[Serializer encodes request]
-    C --> D[JDK HttpClient sends HTTP request]
-    D --> E[Vert.x provider receives request]
-    E --> F[LocalRegistry resolves implementation]
-    F --> G[Reflection invokes target method]
-    G --> H[RpcResponse returns to consumer]
-```
+sequenceDiagram
+    participant Consumer
+    participant Proxy as Service Proxy
+    participant Client as JDK HttpClient
+    participant Server as Vert.x Web Server
+    participant Handler as HttpServerHandler
+    participant Registry as LocalRegistry
+    participant Service as UserServiceImpl
 
+    Consumer->>Proxy: getUser(user)
+    Proxy->>Proxy: Build RpcRequest
+    Proxy->>Proxy: Serialize request
+    Proxy->>Client: Send HTTP POST
+    Client->>Server: Request bytes
+    Server->>Handler: Dispatch request
+    Handler->>Handler: Deserialize RpcRequest
+    Handler->>Registry: Find service implementation
+    Registry-->>Handler: UserServiceImpl
+    Handler->>Service: Invoke method via reflection
+    Service-->>Handler: Return User
+    Handler->>Handler: Build and serialize RpcResponse
+    Handler-->>Client: HTTP response bytes
+    Client-->>Proxy: Response body
+    Proxy->>Proxy: Deserialize RpcResponse
+    Proxy-->>Consumer: Return response data
+```
+<details>
+<summary>Original handwritten request lifecycle notes</summary>
+
+These notes were created while tracing the request and response flow through
+the first working version of RelayRPC.
+
+![Handwritten RPC request lifecycle](docs/images/rpc-request-lifecycle-notes.png)
+
+</details>
 ## Current features
 
 - Generic client stubs created with JDK dynamic proxies.
